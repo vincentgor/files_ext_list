@@ -1,30 +1,36 @@
-var fs = require('fs');
-var path = require('path');
+'use strict';
 
-var res = new Map();
+const fs = require('fs');
+const path = require('path');
 
-var currentDir = process.cwd();
-console.log('currentDir', currentDir);
+const res = new Map();
 
-function gogogo(dir) {
-	var fileList = fs.readdirSync(dir);
+const currentDir = process.cwd();
+
+const getExt = function (dir) {
+	let fileList = fs.readdirSync(dir);
 	fileList.forEach(function(item) {
-		console.log('item', item);
-		var stat = fs.statSync(path.join(dir, item));
+		let stat = fs.statSync(path.join(dir, item));
 		if (stat.isDirectory()) {
-			// ¼ÌÐøµÝ¹é
-			console.log('11111', path.join(dir, item));
-			gogogo(path.join(dir, item));
+			// ç›®å½•é€’å½’
+			getExt(path.join(dir, item));
+		} else {
+			res.set(path.extname(item), path.extname(item));
+		}
+	});
+	fileList.forEach((item) => {
+		let stat = fs.statSync(path.join(dir, item));
+		if (stat.isDirectory()) {
+			getExt(path.join(dir, item));
 		} else {
 			res.set(path.extname(item), path.extname(item));
 		}
 	});
 }
 
-gogogo(currentDir);
+getExt(currentDir);
 
-console.log('¿ÉÒÔ£»¶î');
+// åˆ é™¤ç©ºæ ¼
+res.delete('');
 
 console.log((res.keys()));
-
-// console.log(res);
