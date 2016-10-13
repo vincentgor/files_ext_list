@@ -9,15 +9,6 @@ const currentDir = process.cwd();
 
 const getExt = function (dir) {
 	let fileList = fs.readdirSync(dir);
-	fileList.forEach(function(item) {
-		let stat = fs.statSync(path.join(dir, item));
-		if (stat.isDirectory()) {
-			// 目录递归
-			getExt(path.join(dir, item));
-		} else {
-			res.set(path.extname(item), path.extname(item));
-		}
-	});
 	fileList.forEach((item) => {
 		let stat = fs.statSync(path.join(dir, item));
 		if (stat.isDirectory()) {
