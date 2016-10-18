@@ -15,8 +15,9 @@ fs.watch('version', (event, filename) => {
 		// 需要重启
 		obj.need = false;
 		action(filename);
+	} else {
+		obj.need = true;
 	}
-	
 });
 
 const action = function (filename) {
@@ -25,10 +26,10 @@ const action = function (filename) {
 		encoding: 'utf8'
 	});
 	if (content) {
-		content = content.substr(0, content.length-1);
+		content = content.substr(0, 12);
 	}
 
-	if (content.length < 5) {
+	if (content.length != 12) {
 		// 文件改变得太快，导致不能正确读取文件信息
 		obj.need = true;
 		return;
@@ -44,7 +45,7 @@ const action = function (filename) {
 
 // 重启某个服务
 const restartPm2 = function () {
-	exec('pm2 l', (err, stdout, stderr) => {
+	exec('pm2 list', (err, stdout, stderr) => {
 		obj.need = true;
 	});
 }
